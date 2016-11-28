@@ -177,6 +177,7 @@ public class GdxTests {
 		NinePatchTest.class,
 		NoncontinuousRenderingTest.class,
 		OnscreenKeyboardTest.class,
+		OrthogonalTiledMapIteratorTest.class,
 		PathTest.class,
 		ParallaxTest.class,
 		ParticleControllerTest.class,
