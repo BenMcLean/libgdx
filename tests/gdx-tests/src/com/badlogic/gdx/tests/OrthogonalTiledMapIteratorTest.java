@@ -110,7 +110,8 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         batch.setProjectionMatrix(worldView.getCamera().combined);
         batch.begin();
 
-        // Draw a red box with a white border on top of all visible tiles.
+        // Draw a red box with a white border on top of only certain tiles.
+        // The benefit of the iterator is that it only has to check visible tiles.
         visibleIterator.reset();
         while (visibleIterator.hasNext()) {
             GridPoint2 here = visibleIterator.next();
