@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.iterators.OrthogonalTiledMapIterator;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.tests.utils.GdxTest;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -90,7 +91,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         }
         layers.add(layer);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
-
+        visibleIterator = new OrthogonalTiledMapIterator((OrthographicCamera) worldView.getCamera(), layer);
         screenView.getCamera().position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
         screenView.update(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         batch.enableBlending();
@@ -108,6 +109,17 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         tiledMapRenderer.render();
         batch.setProjectionMatrix(worldView.getCamera().combined);
         batch.begin();
+
+        visibleIterator.reset();
+        while (visibleIterator.hasNext()) {
+            GridPoint2 here = visibleIterator.next();
+            if (isLand(here.x-1,  here.y-1)) {
+                batch.setColor(Color.RED);
+                drawSolidOverTile(batch, here.x, here.y);
+                batch.setColor(Color.WHITE);
+                drawOutlineOverTile(batch, here.x, here.y);
+            }
+        }
 
         batch.end();
         frameBuffer.end();
@@ -135,6 +147,14 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         return x % 2 == 1 && y % 2 == 1;
     }
 
+    public void drawSolidOverTile(SpriteBatch batch, int x, int y) {
+        batch.draw(one, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    }
+
+    public void drawOutlineOverTile(SpriteBatch batch, int x, int y) {
+        drawRect(batch, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    }
+
     public void drawRect(SpriteBatch batch, int x, int y, int width, int height) {
         batch.draw(one, x + width - 1, y + 1, 1, height - 1);
         batch.draw(one, x + 1, y, width - 1, 1);
@@ -142,7 +162,4 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         batch.draw(one, x, y + height - 1, width - 1, 1);
     }
 
-    public void drawSquareOverTile(SpriteBatch batch, int x, int y) {
-        batch.draw(one, x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
-    }
 }

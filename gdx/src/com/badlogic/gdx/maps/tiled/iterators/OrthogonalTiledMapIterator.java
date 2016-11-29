@@ -2,15 +2,16 @@ package com.badlogic.gdx.maps.tiled.iterators;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
+
 import java.util.Iterator;
 
 /**
  * Iterates over tiles in visible area using same logic as OrthogonalTiledMapRenderer from com.badlogic.gdx.maps.tiled.renderers.
  * Created by BenMcLean on 5/5/2016.
  */
-public class OrthogonalTiledMapIterator implements Iterator<Vector2> {
+public class OrthogonalTiledMapIterator implements Iterator<GridPoint2> {
     protected int x1, x2, y1, y2, y, x;
     protected OrthographicCamera camera;
     protected TiledMapTileLayer layer;
@@ -57,13 +58,13 @@ public class OrthogonalTiledMapIterator implements Iterator<Vector2> {
     }
 
     @Override
-    public Vector2 next() {
+    public GridPoint2 next() {
         x++;
         if (x >= x2) {
             y--;
             x = x1;
         }
-        return new Vector2(x, y);
+        return new GridPoint2(x, y);
     }
 
     @Override
