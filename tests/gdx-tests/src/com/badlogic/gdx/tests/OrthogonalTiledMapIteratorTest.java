@@ -41,7 +41,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
     private Viewport worldView;
     private Viewport screenView;
     private Texture screenTexture;
-    private TextureRegion screenRegion = new TextureRegion();
+    private TextureRegion screenRegion;
     private OrthogonalTiledMapIterator visibleIterator;
 
     @Override
@@ -62,15 +62,15 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
 
         pixmap1.setColor(Color.BLUE);
         pixmap1.fill();
-        Texture wallTesture = new Texture(pixmap1);
-        wallTesture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        water = new TextureAtlas.AtlasRegion(wallTesture, 0, 0, TILE_WIDTH, TILE_HEIGHT);
+        Texture waterTesture = new Texture(pixmap1);
+        waterTesture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        water = new TextureAtlas.AtlasRegion(waterTesture, 0, 0, TILE_WIDTH, TILE_HEIGHT);
 
         pixmap1.setColor(Color.GREEN);
         pixmap1.fill();
-        Texture floorTesture = new Texture(pixmap1);
-        floorTesture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        grass = new TextureAtlas.AtlasRegion(floorTesture, 0, 0, TILE_WIDTH, TILE_HEIGHT);
+        Texture grassTesture = new Texture(pixmap1);
+        grassTesture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        grass = new TextureAtlas.AtlasRegion(grassTesture, 0, 0, TILE_WIDTH, TILE_HEIGHT);
 
         pixmap1.dispose();
 
