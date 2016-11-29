@@ -58,14 +58,24 @@ public class OrthogonalTiledMapIterator implements Iterator<GridPoint2> {
         return !(y == y1 && x + 1 >= x2);
     }
 
+    /**
+     * Creates a new GridPoint2, which causes garbage.
+     * next(GridPoint2 fillIn) is recommended over this method.
+     */
     @Override
     public GridPoint2 next() {
+        GridPoint2 fillIn = new GridPoint2();
+        return next(fillIn);
+    }
+
+    public GridPoint2 next(GridPoint2 fillIn) {
         x++;
         if (x >= x2) {
             y--;
             x = x1;
         }
-        return new GridPoint2(x, y);
+        fillIn.set(x, y);
+        return fillIn;
     }
 
     @Override

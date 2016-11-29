@@ -46,6 +46,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
     private Texture screenTexture;
     private TextureRegion screenRegion;
     private OrthogonalTiledMapIterator visibleIterator;
+    private GridPoint2 here;
 
     @Override
     public void create () {
@@ -95,6 +96,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         screenView.getCamera().position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
         screenView.update(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         batch.enableBlending();
+        here = new GridPoint2();
     }
 
     @Override
@@ -114,7 +116,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         // The benefit of the iterator is that it only has to check visible tiles.
         visibleIterator.reset();
         while (visibleIterator.hasNext()) {
-            GridPoint2 here = visibleIterator.next();
+            visibleIterator.next(here);
             if (isLand(here.x-1,  here.y-1)) {
                 batch.setColor(Color.RED);
                 drawSolidOverTile(batch, here.x, here.y);
