@@ -126,6 +126,11 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         batch.end();
     }
 
+    @Override
+    public void resize(int width, int height) {
+        screenView.update(width, height);
+    }
+
     public Boolean isLand (int x, int y) {
         return x % 2 == 1 && y % 2 == 1;
     }
