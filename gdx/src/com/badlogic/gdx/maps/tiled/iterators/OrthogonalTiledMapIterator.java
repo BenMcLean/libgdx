@@ -4,20 +4,21 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
-
 import java.util.Iterator;
 
 /**
- * Iterates over tiles in visible area using same logic as OrthogonalTiledMapRenderer from com.badlogic.gdx.maps.tiled.renderers.
+ * Iterates over tiles in visible area using the same logic as OrthogonalTiledMapRenderer from com.badlogic.gdx.maps.tiled.renderers.
+ * Using this together with OrthogonalTiledMapRenderer makes it easy to draw things on top of tiles that are visible, without drawing to non-visible portions of the tile map
  * Created by BenMcLean on 5/5/2016.
  */
 public class OrthogonalTiledMapIterator implements Iterator<GridPoint2> {
-    protected int x1, x2, y1, y2, y, x;
+    protected int x, x1, x2, y, y1, y2;
     protected OrthographicCamera camera;
     protected TiledMapTileLayer layer;
     protected float unitScale;
     protected Rectangle viewBounds = new Rectangle();
 
+    /** Assumes unit scale of 1.0f */
     public OrthogonalTiledMapIterator(OrthographicCamera camera, TiledMapTileLayer layer) {
         this(camera, layer, 1.0f);
     }

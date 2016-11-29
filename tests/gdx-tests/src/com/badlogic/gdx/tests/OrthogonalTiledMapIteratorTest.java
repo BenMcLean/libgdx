@@ -19,7 +19,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
- * Created by Benjamin on 11/28/2016.
+ * Tests OrthogonalTiledMapIterator by using it to draw a red box with a white border on selected tiles within the visible area of OrthogonalTiledMapRenderer
+ * The green and blue squares are rendered by OrthogonalTiledMapRenderer and the red boxes with the white borders are things that can be rendered separately afterwards
+ * Created by BenMcLean on 11/28/2016.
  */
 public class OrthogonalTiledMapIteratorTest extends GdxTest {
     public static final int VIRTUAL_WIDTH = 128;
@@ -60,9 +62,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         pixmap1.drawPixel(0, 0, -1);
         one = new Texture(pixmap1);
         one.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        //pixmap1.dispose();
 
-        //pixmap1 = new Pixmap(TILE_WIDTH, TILE_HEIGHT, Pixmap.Format.RGBA8888);
         pixmap1.setColor(Color.BLUE);
         pixmap1.fill();
         Texture waterTesture = new Texture(pixmap1);
@@ -110,6 +110,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         batch.setProjectionMatrix(worldView.getCamera().combined);
         batch.begin();
 
+        // Draw a red box with a white border on top of all visible tiles.
         visibleIterator.reset();
         while (visibleIterator.hasNext()) {
             GridPoint2 here = visibleIterator.next();
@@ -161,5 +162,4 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         batch.draw(one, x, y, 1, height - 1);
         batch.draw(one, x, y + height - 1, width - 1, 1);
     }
-
 }

@@ -1,1 +1,0 @@
-./gradlew tests:gdx-tests-lwjgl:launchTestsLwjgl
