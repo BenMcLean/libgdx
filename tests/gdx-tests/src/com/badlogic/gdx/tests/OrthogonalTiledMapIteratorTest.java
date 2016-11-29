@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Tests OrthogonalTiledMapIterator by using it to draw a red box with a white border on selected tiles within the visible area of OrthogonalTiledMapRenderer
- * The green and blue squares are rendered by OrthogonalTiledMapRenderer and the red boxes with the white borders are things that can be rendered separately afterwards
+ * The green and blue squares are rendered by OrthogonalTiledMapRenderer and the red boxes with the white borders are things that can be rendered separately afterwards using the iterator
  * Created by BenMcLean on 11/28/2016.
  */
 public class OrthogonalTiledMapIteratorTest extends GdxTest {
