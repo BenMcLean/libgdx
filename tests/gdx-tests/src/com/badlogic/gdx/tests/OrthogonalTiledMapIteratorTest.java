@@ -27,24 +27,34 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
     public static final int TILE_HEIGHT = 16;
     public static final int SIZE_X = 64;
     public static final int SIZE_Y = 64;
-    private Color worldBackgroundColor = Color.BLACK;
-    private Color screenBackgroundColor = Color.BLACK;
+    public int playerX = SIZE_X / 2, playerY = SIZE_Y / 2;
+
+    private Color worldBackgroundColor;
+    private Color screenBackgroundColor;
     public Texture one;
     public TextureAtlas.AtlasRegion water;
     public TextureAtlas.AtlasRegion grass;
-    private SpriteBatch batch = new SpriteBatch();
-    private TiledMap map = new TiledMap();
+    private SpriteBatch batch;
+    private TiledMap map;
     private TiledMapRenderer tiledMapRenderer;
-    private FrameBuffer frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, true, true);
-    private Viewport worldView = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-    private Viewport screenView = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+    private FrameBuffer frameBuffer;
+    private Viewport worldView;
+    private Viewport screenView;
     private Texture screenTexture;
     private TextureRegion screenRegion = new TextureRegion();
     private OrthogonalTiledMapIterator visibleIterator;
-    public int playerX = SIZE_X / 2, playerY = SIZE_Y / 2;
 
     @Override
     public void create () {
+        worldBackgroundColor = Color.LIGHT_GRAY;
+        screenBackgroundColor = Color.DARK_GRAY;
+        batch = new SpriteBatch();
+        map = new TiledMap();
+        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, true, true);
+        worldView = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        screenView = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        screenRegion = new TextureRegion();
+
         Pixmap pixmap1 = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap1.drawPixel(0, 0, -1);
         one = new Texture(pixmap1);
@@ -54,13 +64,13 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         pixmap1.fill();
         Texture wallTesture = new Texture(pixmap1);
         wallTesture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        water = new TextureAtlas.AtlasRegion(wallTesture, 0, 0, 16, 16);
+        water = new TextureAtlas.AtlasRegion(wallTesture, 0, 0, TILE_WIDTH, TILE_HEIGHT);
 
         pixmap1.setColor(Color.GREEN);
         pixmap1.fill();
         Texture floorTesture = new Texture(pixmap1);
         floorTesture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        grass = new TextureAtlas.AtlasRegion(floorTesture, 0, 0, 16, 16);
+        grass = new TextureAtlas.AtlasRegion(floorTesture, 0, 0, TILE_WIDTH, TILE_HEIGHT);
 
         pixmap1.dispose();
 
@@ -78,6 +88,10 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         }
         layers.add(layer);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
+
+        screenView.getCamera().position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
+        screenView.update(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        batch.enableBlending();
     }
 
     @Override
