@@ -21,12 +21,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Created by Benjamin on 11/28/2016.
  */
 public class OrthogonalTiledMapIteratorTest extends GdxTest {
-    public static final int VIRTUAL_WIDTH = 64;
-    public static final int VIRTUAL_HEIGHT = 64;
-    public static final int TILE_WIDTH = 16;
-    public static final int TILE_HEIGHT = 16;
-    public static final int SIZE_X = 64;
-    public static final int SIZE_Y = 64;
+    public static final int VIRTUAL_WIDTH = 128;
+    public static final int VIRTUAL_HEIGHT = 128;
+    public static final int TILE_WIDTH = 8;
+    public static final int TILE_HEIGHT = 8;
+    public static final int SIZE_X = 128;
+    public static final int SIZE_Y = 128;
     public int playerX = SIZE_X / 2, playerY = SIZE_Y / 2;
 
     private Color worldBackgroundColor;
@@ -59,7 +59,9 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         pixmap1.drawPixel(0, 0, -1);
         one = new Texture(pixmap1);
         one.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        //pixmap1.dispose();
 
+        //pixmap1 = new Pixmap(TILE_WIDTH, TILE_HEIGHT, Pixmap.Format.RGBA8888);
         pixmap1.setColor(Color.BLUE);
         pixmap1.fill();
         Texture waterTesture = new Texture(pixmap1);
@@ -100,7 +102,7 @@ public class OrthogonalTiledMapIteratorTest extends GdxTest {
         Gdx.gl.glClearColor(worldBackgroundColor.r, worldBackgroundColor.g, worldBackgroundColor.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         worldView.apply();
-        worldView.getCamera().position.set(playerX * TILE_HEIGHT + (TILE_HEIGHT / 2), playerY * TILE_WIDTH + (TILE_WIDTH / 2), 0);
+        worldView.getCamera().position.set(playerX * TILE_WIDTH + (TILE_WIDTH / 2), playerY * TILE_HEIGHT + (TILE_HEIGHT / 2), 0);
         worldView.update(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         tiledMapRenderer.setView((OrthographicCamera) worldView.getCamera());
         tiledMapRenderer.render();
