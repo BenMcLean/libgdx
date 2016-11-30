@@ -16,27 +16,6 @@
 
 package com.badlogic.gdx.maps.tiled.renderers;
 
-import static com.badlogic.gdx.graphics.g2d.Batch.C1;
-import static com.badlogic.gdx.graphics.g2d.Batch.C2;
-import static com.badlogic.gdx.graphics.g2d.Batch.C3;
-import static com.badlogic.gdx.graphics.g2d.Batch.C4;
-import static com.badlogic.gdx.graphics.g2d.Batch.U1;
-import static com.badlogic.gdx.graphics.g2d.Batch.U2;
-import static com.badlogic.gdx.graphics.g2d.Batch.U3;
-import static com.badlogic.gdx.graphics.g2d.Batch.U4;
-import static com.badlogic.gdx.graphics.g2d.Batch.V1;
-import static com.badlogic.gdx.graphics.g2d.Batch.V2;
-import static com.badlogic.gdx.graphics.g2d.Batch.V3;
-import static com.badlogic.gdx.graphics.g2d.Batch.V4;
-import static com.badlogic.gdx.graphics.g2d.Batch.X1;
-import static com.badlogic.gdx.graphics.g2d.Batch.X2;
-import static com.badlogic.gdx.graphics.g2d.Batch.X3;
-import static com.badlogic.gdx.graphics.g2d.Batch.X4;
-import static com.badlogic.gdx.graphics.g2d.Batch.Y1;
-import static com.badlogic.gdx.graphics.g2d.Batch.Y2;
-import static com.badlogic.gdx.graphics.g2d.Batch.Y3;
-import static com.badlogic.gdx.graphics.g2d.Batch.Y4;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,6 +23,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+
+import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 
@@ -68,17 +49,12 @@ public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 		final Color batchColor = batch.getColor();
 		final float color = Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, batchColor.a * layer.getOpacity());
 
-		final int layerWidth = layer.getWidth();
-		final int layerHeight = layer.getHeight();
-
 		final float layerTileWidth = layer.getTileWidth() * unitScale;
 		final float layerTileHeight = layer.getTileHeight() * unitScale;
 
-		final int col1 = Math.max(0, (int)(viewBounds.x / layerTileWidth));
-		final int col2 = Math.min(layerWidth, (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
-
-		final int row1 = Math.max(0, (int)(viewBounds.y / layerTileHeight));
-		final int row2 = Math.min(layerHeight, (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
+		int col1=0, row1=0, col2=0, row2=0;
+		getUpperTileBound(layer, col1, row1);
+		getLowerTileBound(layer, col2, row2);
 
 		float y = row2 * layerTileHeight;
 		float xStart = col1 * layerTileWidth;
@@ -204,5 +180,24 @@ public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 			}
 			y -= layerTileHeight;
 		}
+	}
+
+	/**
+	 * Calculates the upper bound of visible tiles
+	 */
+	public void getUpperTileBound (TiledMapTileLayer layer, int fillInColumn, int fillInRow) {
+		fillInColumn = Math.max(0, (int)(viewBounds.x / (layer.getTileWidth() * unitScale)));
+		fillInRow = Math.max(0, (int)(viewBounds.y / (layer.getTileHeight() * unitScale)));
+	}
+
+	/**
+	 * Calculates the lower bound of visible tiles
+	 */
+	public void getLowerTileBound (TiledMapTileLayer layer, int fillInColumn, int fillInRow) {
+		final float layerTileWidth = layer.getTileWidth() * unitScale;
+		final float layerTileHeight = layer.getTileHeight() * unitScale;
+
+		fillInColumn = Math.min(layer.getWidth(), (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
+		fillInRow = Math.min(layer.getHeight(), (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
 	}
 }
