@@ -17,6 +17,7 @@
 package com.badlogic.gdx.math;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 /** A point in a 2D grid, with integer x and y coordinates
  * 
@@ -194,5 +195,58 @@ public class GridPoint2 implements Serializable {
 	@Override
 	public String toString () {
 		return "(" + x + ", " + y + ")";
+	}
+
+	public class GridPoint2Iterator implements Iterator<GridPoint2> {
+		protected int x, x1, x2, y, y1, y2;
+
+		public GridPoint2Iterator (GridPoint2 upper, GridPoint2 lower) {
+			this(upper.x, upper.y, lower.x, lower.y);
+			reset();
+		}
+
+		public GridPoint2Iterator (int x1, int y1, int x2, int y2) {
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
+			reset();
+		}
+
+		public GridPoint2Iterator reset() {
+			y = y2 - 1;
+			x = x1 - 1;
+			return this;
+		}
+
+		/**
+		 * Creates a new GridPoint2, which causes garbage.
+		 * next(GridPoint2 fillIn) is recommended over this method.
+		 */
+		@Override
+		public GridPoint2 next() {
+			GridPoint2 fillIn = new GridPoint2();
+			return next(fillIn);
+		}
+
+		public GridPoint2 next(GridPoint2 fillIn) {
+			x++;
+			if (x >= x2) {
+				y--;
+				x = x1;
+			}
+			fillIn.set(x, y);
+			return fillIn;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !(y == y1 && x + 1 >= x2);
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }

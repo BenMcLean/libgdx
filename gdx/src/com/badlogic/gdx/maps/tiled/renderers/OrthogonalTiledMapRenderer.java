@@ -204,10 +204,8 @@ public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 	public GridPoint2 getLowerTileBound (TiledMapTileLayer layer, GridPoint2 fillIn) {
 		final float layerTileWidth = layer.getTileWidth() * unitScale;
 		final float layerTileHeight = layer.getTileHeight() * unitScale;
-
 		fillIn.x = Math.min(layer.getWidth(), (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
 		fillIn.y = Math.min(layer.getHeight(), (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
-
 		return fillIn;
 	}
 }
