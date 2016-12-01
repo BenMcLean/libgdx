@@ -23,6 +23,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.GridPoint2;
 
 import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
@@ -44,6 +45,8 @@ public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 		super(map, unitScale, batch);
 	}
 
+	private GridPoint2 tempGridPoint2;
+
 	@Override
 	public void renderTileLayer (TiledMapTileLayer layer) {
 		final Color batchColor = batch.getColor();
@@ -52,9 +55,13 @@ public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 		final float layerTileWidth = layer.getTileWidth() * unitScale;
 		final float layerTileHeight = layer.getTileHeight() * unitScale;
 
-		int col1=0, row1=0, col2=0, row2=0;
-		getUpperTileBound(layer, col1, row1);
-		getLowerTileBound(layer, col2, row2);
+		if (tempGridPoint2 == null) tempGridPoint2 = new GridPoint2();
+		getUpperTileBound(layer, tempGridPoint2);
+		final int col1 = tempGridPoint2.x;
+		final int row1 = tempGridPoint2.y;
+		getLowerTileBound(layer, tempGridPoint2);
+		final int col2 = tempGridPoint2.x;
+		final int row2 = tempGridPoint2.y;
 
 		float y = row2 * layerTileHeight;
 		float xStart = col1 * layerTileWidth;
@@ -185,19 +192,22 @@ public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 	/**
 	 * Calculates the upper bound of visible tiles
 	 */
-	public void getUpperTileBound (TiledMapTileLayer layer, int fillInColumn, int fillInRow) {
-		fillInColumn = Math.max(0, (int)(viewBounds.x / (layer.getTileWidth() * unitScale)));
-		fillInRow = Math.max(0, (int)(viewBounds.y / (layer.getTileHeight() * unitScale)));
+	public GridPoint2 getUpperTileBound (TiledMapTileLayer layer, GridPoint2 fillIn) {
+		fillIn.x = Math.max(0, (int)(viewBounds.x / (layer.getTileWidth() * unitScale)));
+		fillIn.y = Math.max(0, (int)(viewBounds.y / (layer.getTileHeight() * unitScale)));
+		return fillIn;
 	}
 
 	/**
 	 * Calculates the lower bound of visible tiles
 	 */
-	public void getLowerTileBound (TiledMapTileLayer layer, int fillInColumn, int fillInRow) {
+	public GridPoint2 getLowerTileBound (TiledMapTileLayer layer, GridPoint2 fillIn) {
 		final float layerTileWidth = layer.getTileWidth() * unitScale;
 		final float layerTileHeight = layer.getTileHeight() * unitScale;
 
-		fillInColumn = Math.min(layer.getWidth(), (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
-		fillInRow = Math.min(layer.getHeight(), (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
+		fillIn.x = Math.min(layer.getWidth(), (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
+		fillIn.y = Math.min(layer.getHeight(), (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
+
+		return fillIn;
 	}
 }
