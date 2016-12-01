@@ -197,6 +197,7 @@ public class GridPoint2 implements Serializable {
 		return "(" + x + ", " + y + ")";
 	}
 
+	/** Iterates over a rectangular area of grid points */
 	public class GridPoint2Iterator implements Iterator<GridPoint2> {
 		protected int x, x1, x2, y, y1, y2;
 
