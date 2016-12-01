@@ -198,15 +198,15 @@ public class GridPoint2 implements Serializable {
 	}
 
 	/** Iterates over a rectangular area of grid points */
-	public class GridPoint2Iterator implements Iterator<GridPoint2> {
+	public class GridPoint2RectangleIterator implements Iterator<GridPoint2> {
 		protected int x, x1, x2, y, y1, y2;
 
-		public GridPoint2Iterator (GridPoint2 upper, GridPoint2 lower) {
+		public GridPoint2RectangleIterator (GridPoint2 upper, GridPoint2 lower) {
 			this(upper.x, upper.y, lower.x, lower.y);
 			reset();
 		}
 
-		public GridPoint2Iterator (int x1, int y1, int x2, int y2) {
+		public GridPoint2RectangleIterator (int x1, int y1, int x2, int y2) {
 			this.x1 = x1;
 			this.y1 = y1;
 			this.x2 = x2;
@@ -214,7 +214,7 @@ public class GridPoint2 implements Serializable {
 			reset();
 		}
 
-		public GridPoint2Iterator reset() {
+		public GridPoint2RectangleIterator reset() {
 			y = y2 - 1;
 			x = x1 - 1;
 			return this;
