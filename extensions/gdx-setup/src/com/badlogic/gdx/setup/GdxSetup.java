@@ -233,7 +233,7 @@ public class GdxSetup {
 	}
 
 	public void build (ProjectBuilder builder, String outputDir, String appName, String packageName, String mainClass,
-		String sdkLocation, CharCallback callback, List<String> gradleArgs) {
+			Language language, String sdkLocation, CharCallback callback, List<String> gradleArgs) {
 		Project project = new Project();
 
 		String packageDir = packageName.replace('.', '/');
@@ -256,7 +256,7 @@ public class GdxSetup {
 		// core project
 		project.files.add(new ProjectFile("core/build.gradle"));
 		project.files.add(new ProjectFile("core/src/MainClass", "core/src/" + packageDir + "/" + mainClass + ".java", true));
-		if (builder.modules.contains(ProjectType.HTML)) {
+		if (builder.modules.contains(ProjectType.HTML) && language.gwtSupported) {
 			project.files.add(new ProjectFile("core/CoreGdxDefinition", "core/src/" + mainClass + ".gwt.xml", true));
 		}
 
@@ -283,7 +283,7 @@ public class GdxSetup {
 			project.files.add(new ProjectFile("android/AndroidManifest.xml"));
 			project.files.add(new ProjectFile("android/build.gradle", true));
 			project.files.add(new ProjectFile("android/ic_launcher-web.png", false));
-			project.files.add(new ProjectFile("android/proguard-project.txt", false));
+			project.files.add(new ProjectFile("android/proguard-rules.pro", false));
 			project.files.add(new ProjectFile("android/project.properties", false));
 			project.files.add(new ProjectFile("local.properties", true));
 		}
@@ -313,10 +313,29 @@ public class GdxSetup {
 			project.files.add(new ProjectFile("ios/data/Default-375w-667h@2x.png", false));
 			project.files.add(new ProjectFile("ios/data/Default-414w-736h@3x.png", false));
 			project.files.add(new ProjectFile("ios/data/Default-1024w-1366h@2x~ipad.png", false));
-			project.files.add(new ProjectFile("ios/data/Icon.png", false));
-			project.files.add(new ProjectFile("ios/data/Icon@2x.png", false));
-			project.files.add(new ProjectFile("ios/data/Icon-72.png", false));
-			project.files.add(new ProjectFile("ios/data/Icon-72@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/Contents.json", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/app-store-icon-1024@1x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/Contents.json", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-app-icon-76@1x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-app-icon-76@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-notifications-icon-20@1x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-notifications-icon-20@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-pro-app-icon-83.5@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-settings-icon-29@1x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-settings-icon-29@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-spotlight-icon-40@1x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/ipad-spotlight-icon-40@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-app-icon-60@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-app-icon-60@3x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-notification-icon-20@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-notification-icon-20@3x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-spotlight-icon-40@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-spotlight-icon-40@3x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-spotlight-settings-icon-29@2x.png", false));
+			project.files.add(new ProjectFile("ios/data/Media.xcassets/AppIcon.appiconset/iphone-spotlight-settings-icon-29@3x.png", false));
+
+
+
 			project.files.add(new ProjectFile("ios/build.gradle", true));
 			project.files.add(new ProjectFile("ios/Info.plist.xml", false));
 			project.files.add(new ProjectFile("ios/robovm.properties"));
@@ -349,6 +368,7 @@ public class GdxSetup {
 		Map<String, String> values = new HashMap<String, String>();
 		values.put("%APP_NAME%", appName);
 		values.put("%APP_NAME_ESCAPED%", appName.replace("'", "\\'"));
+		values.put("%LANG%", language.name);
 		values.put("%PACKAGE%", packageName);
 		values.put("%PACKAGE_DIR%", packageDir);
 		values.put("%MAIN_CLASS%", mainClass);
@@ -653,9 +673,16 @@ public class GdxSetup {
 				 dependencies.add(bank.getDependency(ProjectDependency.GDX));
 			}
 
+			String language = params.containsKey("language") ? params.get("language") : "java";
+			Language languageEnum = Language.JAVA;
+			for(Language l: Language.values()) {
+				if(l.name.equals(language)) {
+					languageEnum = l;
+				}
+			}
 			builder.buildProject(projects, dependencies);
-			builder.build();
-			new GdxSetup().build(builder, params.get("dir"), params.get("name"), params.get("package"), params.get("mainClass"),
+			builder.build(languageEnum);
+			new GdxSetup().build(builder, params.get("dir"), params.get("name"), params.get("package"), params.get("mainClass"), languageEnum,
 				sdkLocation, new CharCallback() {
 					@Override
 					public void character (char c) {
